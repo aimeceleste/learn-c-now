@@ -95,7 +95,7 @@ int move(int spot) {
         // add a break duh...this is where I learned about https://en.wikipedia.org/wiki/Duff%27s_device
         // and the fact that a break is a good practice in a switch-case statement
         // because despite what I learned from Learn C Now, a break seems to be what my compiler needs
-        // or else it doesn't ever do just one case statement, it applys all of them.
+        // or else it doesn't ever do just one case statement, it applies all of them.
         case 1:
             board_arr[0] = m;
             break;
