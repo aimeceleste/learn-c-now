@@ -16,18 +16,19 @@
 #include <stdio.h> 
 #include <stdbool.h>
 
-/* Board structure */ 
+/* Board structure */
 struct board_st {
-    int spot1; 
-    int spot2; 
-    int spot3; 
-    int spot4; 
-    int spot5; 
-    int spot6; 
-    int spot7; 
+    int spot1;
+    int spot2;
+    int spot3;
+    int spot4;
+    int spot5;
+    int spot6;
+    int spot7;
     int spot8;
     int spot9;
 };
+
 /* Global board structure */
 struct board_st b = {};
 
@@ -40,7 +41,7 @@ int curPlayer = 1;
 int counter = 1; 
 
 /* Function primitives */ 
-int drawBoard(struct board_st b);       /* draws the board */ 
+int drawBoard(struct board_st* b);      /* draws the board */
 int move(int spot);                     /* a move puts a value (X or O) into the designated spot */  
 bool canMove(void);                     /* determines whether there is any legal move. Returns false if all board spots are full */ 
 bool checkWin(int curPlayer);           /* check if the current player has won or not */
@@ -59,11 +60,11 @@ int main(void) {
     while (1) {     // begin the play loop
 
         if (canMove() == false) {
-            drawBoard(b);
+            drawBoard(&b);
             printf("You have tied.\n");
             break; 
         } 
-        drawBoard(b);
+        drawBoard(&b);
         // ask to move a player
         printf("Pick a spot.\n");
 
@@ -77,7 +78,7 @@ int main(void) {
 
         // check if win - if yes, break
         if (checkWin(curPlayer) == true ) {
-            drawBoard(b);
+            drawBoard(&b);
             printf("Player %i has won - congrats!\n", curPlayer);
             break;
         } 
@@ -90,16 +91,17 @@ int main(void) {
     return 0;
 }
 
-int drawBoard(struct board_st b) {
-    char spot1 = b.spot1 == 0 ? '1' : b.spot1;
-    char spot2 = b.spot2 == 0 ? '2' : b.spot2;
-    char spot3 = b.spot3 == 0 ? '3' : b.spot3;
-    char spot4 = b.spot4 == 0 ? '4' : b.spot4;
-    char spot5 = b.spot5 == 0 ? '5' : b.spot5;
-    char spot6 = b.spot6 == 0 ? '6' : b.spot6;
-    char spot7 = b.spot7 == 0 ? '7' : b.spot7;
-    char spot8 = b.spot8 == 0 ? '8' : b.spot8;
-    char spot9 = b.spot9 == 0 ? '9' : b.spot9;
+int drawBoard(struct board_st* b) {
+
+    char spot1 = (*b).spot1 == 0 ? '1' : b->spot1;
+    char spot2 = (*b).spot2 == 0 ? '2' : b->spot2;
+    char spot3 = (*b).spot3 == 0 ? '3' : b->spot3;
+    char spot4 = (*b).spot4 == 0 ? '4' : b->spot4;
+    char spot5 = (*b).spot5 == 0 ? '5' : b->spot5;
+    char spot6 = (*b).spot6 == 0 ? '6' : b->spot6;
+    char spot7 = (*b).spot7 == 0 ? '7' : b->spot7;
+    char spot8 = (*b).spot8 == 0 ? '8' : b->spot8;
+    char spot9 = (*b).spot9 == 0 ? '9' : b->spot9;
 
     printf("%c | %c | %c\n", spot1, spot2, spot3);
     printf("----------\n");
@@ -122,34 +124,34 @@ int move(int spot) {
         case 2:
             b.spot2 = m;
             break;
-        case 3: 
+        case 3:
             b.spot3 = m;
             break;
-        case 4: 
+        case 4:
             b.spot4 = m;
             break;
         case 5:
             b.spot5 = m;
             break;
-        case 6: 
+        case 6:
             b.spot6 = m;
             break;
-        case 7: 
+        case 7:
             b.spot7 = m;
             break;
-        case 8: 
+        case 8:
             b.spot8 = m;
             break;
-        case 9: 
+        case 9:
             b.spot9 = m;
             break;
     }
 }
 
 bool canMove(void) { 
-    if (b.spot1 == 0 || b.spot2 == 0 || b.spot3 == 0 || b.spot4 == 0 || 
-        b.spot5 == 0 || b.spot6 == 0 || b.spot7 == 0 || b.spot8 == 0 ||
-        b.spot9 == 0) {
+    if (b.spot1 == 0 || b.spot2 == 0 || b.spot3 == 0 || b.spot4 == 0 ||
+            b.spot5 == 0 || b.spot6 == 0 || b.spot7 == 0 || b.spot8 == 0 ||
+            b.spot9 == 0) {
         return true; 
     } else {
         return false;
@@ -158,7 +160,6 @@ bool canMove(void) {
 
 bool checkWin(int curPlayer) {
     if (b.spot1 != 0 && b.spot1 == b.spot2 && b.spot2 == b.spot3) {
-        //printf("testme");
         return true; 
     } else if (b.spot4 != 0 && b.spot4 == b.spot5 && b.spot5 == b.spot6) {
         return true; 
@@ -176,7 +177,6 @@ bool checkWin(int curPlayer) {
         return true; 
     }
     else {
-        // printf("Condition null");
         return false;
     }
 }
@@ -227,7 +227,7 @@ bool isValid(int spot) {
             }
             break;
         case 8: 
-            m = b.spot8; 
+            m = b.spot8;
             if ( m == 0 ) {
                 return true;
             }            
