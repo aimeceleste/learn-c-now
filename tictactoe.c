@@ -84,7 +84,7 @@ int drawBoard(int board_arr[]) {
 
 int i=0;
 for (i; board_arr[i]; i++ )
-    //TODO: I'm not actually sure this works with the nine chars and the board_arr index
+    //TODO: I'm sure this doesn't work with the nine chars and the board_arr index
     printf("%c | %c | %c\n----------\n %c | %c | %c\n----------\n %c | %c | %c\n", board_arr[i+1]);
 }
 
