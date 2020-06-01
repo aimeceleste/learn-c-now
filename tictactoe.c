@@ -13,24 +13,25 @@
  * are already occupied and be sure to report results as soon as the
  * player or the computer has three squares in a row in any direction.
  *
- * Refactoring to remove the struct and to add some limited AI for the computer player.
+ * Refactoring to add some limited AI for the computer player. Seems
+ * like adding a player 1 and player 2 function to the play loop would
+ * make my life easier, as well. Could add some randomness to the AI
+ * if I get excited, as otherwise the computer player would always win.
  */
 #include <stdio.h>
 #include <stdbool.h>
 
-/* Board array */
-int board_arr[9];
+
 
 /* Global variables */
-// flip a coin / random number gen a first mover OR select always human moves first
-// X = human O = computer (temp: human move 2)
-int numPlayers = 2;
-// first player is 88 for X
+// x = human (play1), o = computer (play2, temp: human moves both times)
 int curPlayer = 1;
-int counter = 1;
+
+/* (Global) board PTR, initialized with all zeros NOT Os */
+int board_arr[9] = {0,0,0,0,0,0,0,0,0}; // arrays' names are pointers, don't forget!
 
 /* Function primitives */
-int drawBoard(int board_arr[9]);       /* draws the board */
+int drawBoard(int arr[9]);              /* draws the board */
 int move(int spot);                     /* a move puts a value (X or O) into the designated spot */
 bool canMove(void);                     /* determines whether there is any legal move. Returns false if all board spots are full */
 bool checkWin(int curPlayer);           /* check if the current player has won or not */
@@ -74,18 +75,34 @@ int main(void) {
 
         // swap players
         curPlayer = curPlayer == 1 ? 2 : 1 ;
-        // back to front of loop if not win
+        // back to front of loop if no win
     }
 
     return 0;
 }
 
-int drawBoard(int board_arr[]) {
-
-int i=0;
-for (i; board_arr[i]; i++ )
-    //TODO: I'm sure this doesn't work with the nine chars and the board_arr index
-    printf("%c | %c | %c\n----------\n %c | %c | %c\n----------\n %c | %c | %c\n", board_arr[i+1]);
+int drawBoard(int arr[9]) {
+/*
+        for (int i = 0; i < 9; i++) {
+            if (i == 0 || i == 3 || i == 6) {
+                printf("%d |", arr[i]);
+            }
+            else if ((i+1)%2 == 0) {
+                printf("| %d ", arr[i]);
+            }
+            else if ((i+1)%3 == 0) {
+                printf("| %d\n", arr[i]);
+            }
+            else {
+                printf("---------\n");
+            }
+        }
+*/
+    printf("%c | %c | %c\n", arr[0], arr[1], arr[2]);
+    printf("----------\n");
+    printf("%c | %c | %c\n", arr[3], arr[4], arr[5]);
+    printf("----------\n");
+    printf("%c | %c | %c\n", arr[6], arr[7], arr[8]);
 }
 
 int move(int spot) {
@@ -121,12 +138,12 @@ int move(int spot) {
             board_arr[7] = m;
             break;
         case 9:
-            board_arr[81] = m;
+            board_arr[8] = m;
             break;
     }
 }
 
-bool canMove(void) {
+bool canMove(void) {               // tests for a tie between players
     if (board_arr[0] == 0 || board_arr[1] == 0 || board_arr[2] == 0 || board_arr[3] == 0 ||
         board_arr[4] == 0 || board_arr[5] == 0 || board_arr[6] == 0 || board_arr[7] == 0 ||
         board_arr[8] == 0) {
@@ -136,9 +153,8 @@ bool canMove(void) {
     }
 }
 
-bool checkWin(int curPlayer) {
+bool checkWin(int curPlayer) {      // looks for a win condition for the current player
     if (board_arr[0] != 0 && board_arr[0] == board_arr[1] && board_arr[1] == board_arr[2]) {
-        //printf("testme");
         return true;
     } else if (board_arr[3] != 0 && board_arr[3] == board_arr[4] && board_arr[4] == board_arr[5]) {
         return true;
@@ -156,13 +172,12 @@ bool checkWin(int curPlayer) {
         return true;
     }
     else {
-        // printf("Condition null");
         return false;
     }
 }
 
-bool isValid(int spot) {
-    int m = 0;
+bool isValid(int spot) {            // an invalid move means the spot is filled - this tests for open spots
+    int m;
     switch (spot) {
         case 1:
             m = board_arr[0];
